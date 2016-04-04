@@ -2,7 +2,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <graphics.h>
-
+void random(int w,int h,int nmines,int** a){
+	for (int i=0;i<nmines;){
+        int rw=rand()%w;
+        int rh=rand()%h;
+		if(a[rw][rh]!=1){ a[rw][rh]=1; i++;}
+		
+}
+	
+	
+}
 void pole(int a, int b,int c){
      initwindow(a*40,b*40+100);
      setcolor(COLOR(255,255,255));
@@ -14,10 +23,10 @@ void pole(int a, int b,int c){
 	settextstyle(3,0,4);
 	bgiout<<"mines: "<<c;
 	outstreamxy(1,b*40+50);
-  }
+}
 
 int main(){
-    int width=20,height=5,dif=0,menu=1;
+    int width=10,height=10,dif=20,menu=1;
 initwindow(500,300);
 settextstyle(3,0,4);
 setcolor(COLOR(0,255,0));
@@ -110,17 +119,21 @@ delay(1);
    
    break;
 }
-
 clearmouseclick(WM_LBUTTONDOWN);
 delay(30);
 }
-int nmines=((width+height)/100)*dif;
-closegraph();
-for (int i=1;i<20;i++)
-    for (int j=1;j<20;j++){
-pole(i,j,nmines);
-delay(100);
-closegraph();
+int nmines=(int)((float)(width*height)/100)*dif;
+pole(width,height,nmines);
+int** grid;
+grid=new int* [height+2];
+for (int i=0;i<=height+1;i++){
+    grid[i]=new int [width+2];
 }
-getch();
+
+int tempx,tempy;
+random(width,height,nmines,grid);
+while (1){
+    printf("%i\n",grid[1][1]);
+    delay(100);
+    }
 }
