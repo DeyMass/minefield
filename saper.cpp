@@ -4,8 +4,11 @@
 #include <graphics.h>
 void random(int w,int h,int nmines,int** a){
 	for (int i=0;i<nmines;){
-        int rw=rand()%w;
-        int rh=rand()%h;
+printf("sup");
+        int rw,rh;
+        rw=(rand()%(w-1))+1;
+        rh=(rand()%(h-1))+1;
+        printf("%i:%i",rw,rh);
 		if(a[rw][rh]!=1){ a[rw][rh]=1; i++;}
 		
 }
@@ -23,6 +26,7 @@ void pole(int a, int b,int c){
 	settextstyle(3,0,4);
 	bgiout<<"mines: "<<c;
 	outstreamxy(1,b*40+50);
+printf("sup");
 }
 
 int main(){
@@ -124,16 +128,69 @@ delay(30);
 }
 int nmines=(int)((float)(width*height)/100)*dif;
 pole(width,height,nmines);
+char out[3];
+int** opened;
 int** grid;
-grid=new int* [height+2];
-for (int i=0;i<=height+1;i++){
+int** secondg;
+int** thirdg;
+grid=new int* [height+3];
+secondg=new int* [height+3];
+thirdg=new int* [height+3];
+opened=new int* [height+3];
+for (int i=0;i<height+2;i++){
     grid[i]=new int [width+2];
+    secondg[i]=new int [width+2];
+    thirdg[i]=new int [width+2];
+    opened[i]=new int [width+2];
 }
-
-int tempx,tempy;
+     for (int i=0;i<height+2;i++)
+    for (int j=0;j<width+2;j++){
+        grid[i][j]=0;
+        thirdg[i][j]=0;
+        opened[i][j]=0;
+    }
 random(width,height,nmines,grid);
+for (int i=1;i<height+1;i++)
+    for (int j=1;j<width+1;j++){
+   secondg[i][j]=(grid[i-1][j]+grid[i+1][j]+grid[i][j-1]+grid[i][j+1]+grid[i-1][j-1]+grid[i-1][j+1]+grid[i+1][j-1]+grid[i+1][j+1]);   
+}
+int tempx,tempy;
+setcolor(COLOR(255,255,255));
 while (1){
-    printf("%i\n",grid[1][1]);
+      tempy=mousey()/40+1;
+      tempx=mousex()/40+1;
+    if (ismouseclick(WM_LBUTTONDOWN)&&mousey()<height*40&&thirdg[tempx][tempy]==0){
+    if (grid[tempx][tempy]==1) break;
+        out[0]=48+secondg[tempx][tempy];
+        out[1]=0;
+        opened[tempx][tempy]=1;
+        setcolor(COLOR(255,255,255));
+       outtextxy((tempx-1)*40+10,(tempy-1)*40+5,out);
+       clearmouseclick(WM_LBUTTONDOWN);
+    }
+    if (ismouseclick(WM_RBUTTONDOWN)&&opened[tempx][tempy]==0&&mousey()<height*40&&thirdg[tempx][tempy]==0){
+     
+    out[0]='A';
+    thirdg[tempx][tempy]=1;
+    setcolor(COLOR(255,0,0));
+    outtextxy((tempx-1)*40+10,(tempy-1)*40+5,out);
+    clearmouseclick(WM_RBUTTONDOWN);
+    }
+    
+    if (ismouseclick(WM_RBUTTONDOWN)&&opened[tempx][tempy]==0&&mousey()<height*40&&thirdg[tempx][tempy]==1){
+    out[0]=' ';
+    out[1]=' ';
+    out[2]=0;
+    thirdg[tempx][tempy]=0;
+    setcolor(COLOR(255,0,0));
+    outtextxy((tempx-1)*40+10,(tempy-1)*40+5,out);
+    clearmouseclick(WM_RBUTTONDOWN);
+    }
+    //readimage("");
+    clearmouseclick(WM_LBUTTONDOWN);
+    clearmouseclick(WM_RBUTTONDOWN);
+       
     delay(100);
+    
     }
 }
